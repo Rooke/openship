@@ -4,12 +4,16 @@ import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { 
+const ITEMS = [
+  '32d06f49e0d244f46479cfde52ce44b120a5378b1bdec9433050ab51897f5ba8',
+]
+
+import {
   setWeb3,
   addContract,
   setUserWalletAdress
  } from './actions';
- 
+
 import NavigationComponent from './components/NavigationComponent';
 import { BuyView, ShipView } from './components';
 
@@ -19,7 +23,11 @@ import './css/pure-min.css'
 import './App.css'
 
 class App extends Component {
- componentWillMount() {
+  constructor(props) {
+    super(props);
+    this.instantiateContract = this.instantiateContract.bind(this);
+  }
+  componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
 
@@ -36,35 +44,26 @@ class App extends Component {
   }
 
   instantiateContract() {
-    /*
-     * SMART CONTRACT EXAMPLE
-     *
-     * Normally these functions would be called in the context of a
-     * state management library, but for convenience I've placed them here.
-     */
-    const contract = require('truffle-contract')
-    const simpleStorage = contract(SimpleStorageContract)
-    simpleStorage.setProvider(this.props.web3.currentProvider)
-
-    // Declaring this for later so we can chain functions on SimpleStorage.
-    var simpleStorageInstance
-
-    // Get accounts.
-    this.props.web3.eth.getAccounts((error, accounts) => {
-      console.log(accounts);
-      this.props.setUserWalletAdress(accounts[0]);
-      simpleStorage.deployed().then((instance) => {
-        simpleStorageInstance = instance
-        this.props.addContract(simpleStorageInstance);
-        // Stores a given value, 5 by default.
-        //return simpleStorageInstance.set(5, {from: accounts[0]})
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        //return simpleStorageInstance.get.call(accounts[0])
-      }).then((result) => {
-        // Update state with the result.
-      })
-    })
+    // const contract = require('truffle-contract')
+    // const itemContract = contract(SimpleStorageContract)
+    // itemContract.setProvider(this.props.web3.currentProvider)
+    //
+    // // Get account
+    // if (window.location.indexOf("ethship.mikerooke.net") !== -1) {
+    //   this.props.setUserWalletAdress('35a20fb66a2dd8c6ae8efeb93f19b268e4f303fe12e9d199b2083f6f91828742');
+    // } else {
+    //   this.props.web3.eth.getAccounts((error, accounts) => {
+    //     console.log(accounts[0]);
+    //     this.props.setUserWalletAdress(accounts[0]);
+    //   });
+    // }
+    //
+    // // Get items
+    // ITEMS.forEach((itemAddr) => {
+    //   itemContract.at(itemAddr).then((instance) => {
+    //     this.props.addContract(instance);
+    //   })
+    // });
   }
 
   render() {
@@ -75,7 +74,7 @@ class App extends Component {
             <NavigationComponent />
             <div>
               <Route path='/buy' component={BuyView} />
-              <Route path='/ship' component={BuyView} />
+              <Route path='/ship' component={ShipView} />
             </div>
           </div>
         </Router>
