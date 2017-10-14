@@ -1,5 +1,3 @@
-import React from 'react';
-
 const intialState = {
   web3: null,
 };
