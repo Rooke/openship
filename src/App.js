@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
-import { Router, Route } from 'react-router';
+import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux'; 
 
-import { setWeb3 } from 'actions';
-import NavigationComponent from 'src/components/NavigationCompoent';
-import { BuyView, ShipView } from 'src/components';
+import { setWeb3 } from './actions';
+import NavigationComponent from './components/NavigationComponent';
+import { BuyView, ShipView } from './components';
 
 import './css/oswald.css'
 import './css/open-sans.css'
