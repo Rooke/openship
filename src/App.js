@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
+import { Router, Route } from 'react-router';
+import { connect } from 'react-redux'; 
+
+import { setWeb3 } from 'actions';
+import NavigationComponent from 'src/components/NavigationCompoent';
+import { BuyView, ShipView } from 'src/components';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -8,24 +14,13 @@ import './css/pure-min.css'
 import './App.css'
 
 class App extends Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      storageValue: 0,
-      web3: null
-    }
-  }
-
-  componentWillMount() {
+ componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
 
     getWeb3
     .then(results => {
-      this.setState({
-        web3: results.web3
-      })
+      this.props.setWeb3(results.web3);
 
       // Instantiate contract once web3 provided.
       this.instantiateContract()
@@ -69,26 +64,23 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <nav className="navbar pure-menu pure-menu-horizontal">
-            <a href="#" className="pure-menu-heading pure-menu-link">Truffle Box</a>
-        </nav>
-
-        <main className="container">
-          <div className="pure-g">
-            <div className="pure-u-1-1">
-              <h1>Good to Go!</h1>
-              <p>Your Truffle Box is installed and ready.</p>
-              <h2>Smart Contract Example</h2>
-              <p>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</p>
-              <p>Try changing the value stored on <strong>line 59</strong> of App.js.</p>
-              <p>The stored value is: {this.state.storageValue}</p>
-            </div>
-          </div>
-        </main>
+      <div>
+        <NavigationComponent />
+        <Router>
+          <Route path='/buy' component={BuyView} />
+          <Route path='/ship' component={BuyView} />
+        </Router>
       </div>
     );
   }
 }
 
-export default App
+const mapStateToProps = (state) => ({
+  web3: state.web3,
+})
+
+const mapDispatchToProps = dispatch => ({
+  setWeb3: (web3) => dispatch(setWeb3(web3)),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
