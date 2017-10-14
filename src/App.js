@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
-import { Router, Route } from 'react-router-dom';
-import { connect } from 'react-redux'; 
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { setWeb3 } from './actions';
 import NavigationComponent from './components/NavigationComponent';
@@ -65,12 +65,17 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavigationComponent />
         <Router>
-          <Route path='/buy' component={BuyView} />
-          <Route path='/ship' component={BuyView} />
+          <div>
+            <NavigationComponent />
+            <div>
+              <Route path='/buy' component={BuyView} />
+              <Route path='/ship' component={BuyView} />
+            </div>
+          </div>
         </Router>
       </div>
+
     );
   }
 }
