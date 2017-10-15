@@ -15,7 +15,7 @@ const NavLink = styled(Link)`
   height: 50px;
   width: 80px;
   text-align: center;
-  line-height: 42px;  
+  line-height: 42px;
   background: #007ae5;
   border-radius: none;
   color: white;
@@ -34,4 +34,5 @@ export default () =>
   <Wrapper>
       <NavLink to='/buy'>Buy</NavLink>
       <NavLink to='/ship'>Ship</NavLink>
+      <NavLink to='/sell'>Sell</NavLink>
   </Wrapper>;
