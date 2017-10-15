@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   align-items: center;
 `;
 
-const NavLink = styled(Link)`
+const NLink = styled(NavLink)`
   height: 50px;
   width: 80px;
   text-align: center;
@@ -30,9 +30,13 @@ const NavLink = styled(Link)`
   }
 `;
 
+const activeStyle = {
+  color: 'black',
+};
+
 export default () =>
   <Wrapper>
-      <NavLink to='/buy'>Buy</NavLink>
-      <NavLink to='/ship'>Ship</NavLink>
-      <NavLink to='/sell'>Sell</NavLink>
+      <NLink activeStyle={activeStyle} to='/buy'>Buy</NLink>
+      <NLink activeStyle={activeStyle} to='/ship'>Ship</NLink>
+      <NLink activeStyle={activeStyle} to='/sell'>Sell</NLink>
   </Wrapper>;

@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 import Home from './Home';
 import AcceptOrder from './AcceptOrder';
 import TransferItem from './TransferItem';
+import { withRouter } from 'react-router';
 import withProps from '../../utils/withProps';
 
 class ShipView extends Component {
@@ -18,7 +19,7 @@ class ShipView extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   () => ({}),
   {  }
-)(ShipView);
+)(ShipView));

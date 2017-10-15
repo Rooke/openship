@@ -103,6 +103,10 @@ contract Shippable {
     	}
     }
 
+    function getValue() public returns (uint) {
+      return productValue;
+    }
+
     // Verifies if the current shipper is responsible for the shipped item
     function isMyShipment() public returns (bool) {
     	if(msg.sender == currentShipper){

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemDetail from '../views/buy/ItemDetail';
 import Form from 'react-jsonschema-form';
+import { withRouter } from 'react-router';
+
 
 class TransferItem extends Component {
   render() {
@@ -55,10 +57,10 @@ class TransferItem extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   (state) => ({
     itemObjs: state.items.items,
     user: state.userWallet.userWalletAdress,
   }),
   {  }
-)(TransferItem);
+)(TransferItem));
