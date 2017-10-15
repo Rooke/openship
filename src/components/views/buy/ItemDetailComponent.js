@@ -3,33 +3,37 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding: 10px;
-`;
-
-const Title = styled.div`
-  font-size: 25px;
-  color: #333333;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 `;
 
 const Image = styled.img`
+  flex-base: 50%;
   width: 100%;
   max-width: 400px;
-  margin: 0 auto;
-  display: block;
-`
+`;
 
-const Description = styled.div`
-  max-width: 400px;
-`
+const Title = styled.div`
+  font-size: 35px;
+  font-weight: 400;
+  color: #333333;
+  margin-bottom: 20px;
+`;
 
 const List = styled.div`
-  padding-top: 10px;
-  width: 100%;
+  flex-base: 50%;
+  padding: 10px;
   font-family: 20px;
   font-family: Montserrat;
   font-weight: 700;
   display: flex;
   flex-direction: column;
-  tex-decoration: none;
+  font-weight: 400;
+
+  & > div {
+    margin: 5px 0 5px 0;
+  }
 `;
 
 const Button = styled.button`
@@ -40,7 +44,11 @@ const Button = styled.button`
   width: 70px;
   color: white;
   display: block;
-  margin: 10px auto;
+  margin-top: 10px;
+`
+
+const Label = styled.label`
+  font-weight: 800;
 `
 
 export default ({ title, src, price, deliveryLocation, currentLocation, currentShipPrice, shippingTime }) =>
@@ -50,36 +58,36 @@ export default ({ title, src, price, deliveryLocation, currentLocation, currentS
       <Title>{title}</Title>
       {price && (
         <div>
-          <label>Price: </label>
+          <Label>Price: </Label>
           <span>{price}</span>
         </div>
       )}
       {deliveryLocation && (
         <div>
-          <label>Delivery Location: </label>
+          <Label>Delivery Location: </Label>
           <span>{deliveryLocation}</span>
         </div>
       )}
       {currentLocation && (
         <div>
-          <label>Current Location: </label>
+          <Label>Current Location: </Label>
           <span>{currentLocation}</span>
         </div>
       )}
       {currentShipPrice && (
         <div>
-          <label>Shipping Price: </label>
+          <Label>Shipping Price: </Label>
           <span>{currentShipPrice}</span>
         </div>
       )}
       {shippingTime && (
         <div>
-          <label>Shipping Time: </label>
+          <Label>Shipping Time: </Label>
           <span>{shippingTime}</span>
         </div>
       )}
+      <Button>
+        Buy
+      </Button>
     </List>
-    <Button>
-      Buy
-    </Button>
   </Wrapper>

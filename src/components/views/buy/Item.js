@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const WrapLink = styled(Link)`
+  flex-basis: 500px;
+  max-width: 500px;
   padding: 0 10px 0 10px;
   text-decoration: none;
   color: #333;
@@ -10,17 +12,13 @@ const WrapLink = styled(Link)`
 
 const Item = styled.div`
   padding: 10px;
-  max-width: 100%;
-  @media screen (min-width: 450) {
-    max-width: 250px;
-  }
   box-shadow: 2px 3px 4px 0px rgba(0,0,0,0.75);
   background: #f9f9f9;
   margin: 7px 0 7px 0;
 `;
 
 const Image = styled.img`
-  max-width: inherit;
+  width: 100%;  
 `;
 
 const Title = styled.div`

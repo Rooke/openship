@@ -10,7 +10,7 @@ import instanceAddresses from './utils/instances.json';
 import Welcome from './components/Welcome';
 
 import ItemDetail from './components/views/buy/ItemDetail';
-import SellView from './component/sell/SellView';
+import SellView from './components/sell/SellView';
 
 const StyleWrapper = styled.div`
   font-family: Montserrat;
