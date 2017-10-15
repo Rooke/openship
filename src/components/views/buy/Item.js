@@ -43,11 +43,11 @@ const Price = styled.div`
 
 export default ({item}) =>
   <Wrapper>
-    <Item>
-      <Image src={item.src}/>
-      <Description>
-        <Title>{item.title}</Title>
-        <Price>{item.price}</Price>
-      </Description>
-    </Item>
-  </Wrapper>;
+    <Image src={item.src}/>
+    <Title>{item.title}</Title>
+    {item.price && <Price>{item.price}</Price>}
+    {item.deliveryLocation && <div>{item.deliveryLocation}</div>}
+    {item.currentLocation && <div>{item.currentLocation}</div>}
+    {item.currentShipPrice && <div>{item.currentShipPrice}</div>}
+    {item.shiipingTime && <div>{item.shippingTime}</div>}
+  </Wrapper>
