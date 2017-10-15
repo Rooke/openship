@@ -67,7 +67,7 @@ contract Shippable {
     	}
 	}
 
-	function transferOwnership(address newOwner) public {
+	function transferOwnership(address newOwner) private {
 		require(newOwner != address(0));
 		owner = newOwner;
 	}    
@@ -110,10 +110,11 @@ contract Shippable {
     // Confirms that the item was delivered to the owner/buyer
     function delivered() public {
     	if (msg.sender == owner){
-	    	// Pay all shippers
-	    	uint shipperID;
-	    	for (shipperID=0; shipperID<numShippers; shipperID++){
-	    		shippers[shipperID].addr.transfer(shippers[shipperID].shipPrice);
+	    	// Pay shipping price to all shippers
+	    	uint shipperID = numShippers-1;
+	    	shippers[shipperID].addr.transfer(shippers[shipperID].shipPrice);
+	    	for (shipperID=numShippers-1; shipperID>=0; shipperID--){
+	    		shippers[shipperID].addr.transfer(shippers[shipperID].shipPrice - shippers[shipperID+1].shipPrice);
 	    	}
 	    	shippingState = ShippingState.Delivered;	
     	}
