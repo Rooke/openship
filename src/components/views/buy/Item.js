@@ -43,36 +43,41 @@ const Price = styled.div`
 
 export default ({item, showShippingPrice, showShippingTime}) =>
   <Wrapper>
-    <Image src={item.src}/>
-    <Title>{item.title}</Title>
-    {item.price && (
-      <div>
-        <label>Price: </label>
-        <Price>{item.price}</Price>
-      </div>
-    )}
-    {item.deliveryLocation && (
-      <div>
-        <label>Delivery Location: </label>
-        <span>{item.deliveryLocation}</span>
-      </div>
-    )}
-    {item.currentLocation && (
-      <div>
-        <label>Current Location: </label>
-        <span>{item.currentLocation}</span>
-      </div>
-    )}
-    {item.currentShipPrice && showShippingPrice (
-      <div>
-        <label>Shipping Price: </label>
-        <span>{item.currentShipPrice}</span>
-      </div>
-    )}
-    {item.shippingTime && showShippingTime (
-      <div>
-        <label>Shipping Time: </label>
-        <span>{item.shippingTime}</span>
-      </div>
-    )}
+    <Item>
+      <Image src={item.src}/>
+      <Description>
+        <Title>{item.title}</Title>
+        {item.price && (
+          <div>
+            <label>Price: </label>
+            <Price>{item.price}</Price>
+          </div>
+        )}
+        {item.deliveryLocation && (
+          <div>
+            <label>Delivery Location: </label>
+            <span>{item.deliveryLocation}</span>
+          </div>
+        )}
+        {item.currentLocation && (
+          <div>
+            <label>Current Location: </label>
+            <span>{item.currentLocation}</span>
+          </div>
+        )}
+        {item.currentShipPrice && showShippingPrice (
+          <div>
+            <label>Shipping Price: </label>
+            <span>{item.currentShipPrice}</span>
+          </div>
+        )}
+        {item.shippingTime && showShippingTime (
+          <div>
+            <label>Shipping Time: </label>
+            <span>{item.shippingTime}</span>
+          </div>
+        )}
+      </Description>
+    </Item>
   </Wrapper>
+;
