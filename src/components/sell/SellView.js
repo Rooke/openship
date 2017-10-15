@@ -37,9 +37,9 @@ class SellView extends Component {
             'ui:order': ['address', 'price']
           }}
           onSubmit={({ formData }) => {
-            this.props.itemContract.new([formData.price, formData.address])
-              .then(() => {
-                this.props.history.push('/sell');
+            this.props.itemContract.new(formData.price, formData.address)
+              .then((newInstance) => {
+                this.props.addInstance(newInstance);
               })
           }}
         />

@@ -7,6 +7,7 @@ import { setItemInfo } from './actions/items';
 import styled from 'styled-components';
 import withProps from './utils/withProps';
 import instanceAddresses from './utils/instances.json';
+import Welcome from './components/Welcome';
 
 const StyleWrapper = styled.div`
   font-family: Montserrat;
@@ -41,7 +42,35 @@ class App extends Component {
       itemInstances: [],
       itemContract: null,
     };
+    this.addInstance = this.addInstance.bind(this);
+    this.fetchItemsData = this.fetchItemsData.bind(this);
   }
+
+  fetchItemsData() {
+    this.state.itemInstances.forEach((instance, index) => {
+      instance.transportInfo.call({from: this.props.user}).then((data) => {
+        this.props.setItemInfo(index, {
+          deliveryLocation: data[0],
+          currentLocation: data[1],
+          currentShipPrice: data[2].toNumber(),
+          deadline: data[3].toNumber()
+        });
+      });
+      instance.isMyItem.call({from: this.props.user}).then((data) => {
+        this.props.setItemInfo(index, { isMyItem: data });
+      });
+      instance.isSold.call({from: this.props.user}).then((data) => {
+        this.props.setItemInfo(index, { isSold: data });
+      });
+    });
+  }
+
+  addInstance(newInstance) {
+    this.setState({ itemInstances: [ ...this.state.itemInstances, newInstance ] }, () => {
+      this.fetchItemsData();
+    });
+  }
+
   componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
@@ -78,22 +107,7 @@ class App extends Component {
 
   loadItemInstances(items) {
     if (items.length === 0) {
-      this.state.itemInstances.forEach((instance, index) => {
-        instance.transportInfo.call({from: this.props.user}).then((data) => {
-          this.props.setItemInfo(index, {
-            deliveryLocation: data[0],
-      	    currentLocation: data[1],
-      	    currentShipPrice: data[2].toNumber(),
-      	    deadline: data[3].toNumber()
-          });
-        });
-        instance.isMyItem.call({from: this.props.user}).then((data) => {
-          this.props.setItemInfo(index, { isMyItem: data });
-        });
-        instance.isSold.call({from: this.props.user}).then((data) => {
-          this.props.setItemInfo(index, { isSold: data });
-        });
-      });
+      this.fetchItemsData();
       return;
     }
 
@@ -101,9 +115,6 @@ class App extends Component {
     const remainingItems = [ ...items ];
 
     this.state.itemContract.at(item).then((instance) => {
-    // this.state.itemContract.deployed().then((instance) => {
-    // this.state.itemContract.new().then((instance) => {
-      console.log(instance);
       this.setState({ itemInstances: [ ...this.state.itemInstances, instance ] }, () => {
         this.loadItemInstances(remainingItems);
       });
@@ -115,6 +126,7 @@ class App extends Component {
       web3: this.state.web3,
       itemContract: this.state.itemContract,
       itemInstances: this.state.itemInstances,
+      addInstance: this.addInstance,
     };
     return (
       <div>
@@ -122,6 +134,7 @@ class App extends Component {
           <StyleWrapper>
             <NavigationComponent />
             <div>
+              <Route exact path='/' component={Welcome}/>
               <Route path='/buy' component={withProps(BuyView, web3Props)} />
               <Route path='/ship' component={withProps(ShipView, web3Props)} />
               <Route path='/sell' component={withProps(SellView, web3Props)} />
