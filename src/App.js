@@ -3,12 +3,12 @@ import SimpleStorage from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { styled } from 'styled-components';
+import styled from 'styled-components';
 
 const StyleWrapper = styled.div`
   font-family: Montserrat;
   font-size: 1em;
-`
+`;
 
 const ITEMS = [
   '17a6a85d69081cd44755cb4dfc93e675ff5b2d4d',
@@ -20,7 +20,7 @@ import {
 
 import NavigationComponent from './components/NavigationComponent';
 import ShipView from './components/ShipView';
-import BuyView from './components/ShipView';
+import BuyView from './components/views/buy/BuyView';
 
 import './css/oswald.css'
 import './css/open-sans.css'
