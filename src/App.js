@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import SimpleStorageContract from '../build/contracts/SimpleStorage.json'
+import SampleContract from '../build/contracts/SampleContract.json'
 import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -23,18 +23,13 @@ import './css/pure-min.css'
 import './App.css'
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.instantiateContract = this.instantiateContract.bind(this);
-  }
+ 
   componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
-
     getWeb3
     .then(results => {
       this.props.setWeb3(results.web3);
-
       // Instantiate contract once web3 provided.
       this.instantiateContract()
     })
@@ -44,6 +39,17 @@ class App extends Component {
   }
 
   instantiateContract() {
+    //  require Truffle to create Contract
+    const contract = require('truffle-contract');
+
+    //  create Contrat from JSON
+    let contract = contract(SampleContract);
+
+    //  set web3 as Contract interface / provider
+    contract.setProvider(this.props.web3.currentProvider);
+
+
+    -    simpleStorage.setProvider(this.props.web3.currentProvider) 
     // const contract = require('truffle-contract')
     // const itemContract = contract(SimpleStorageContract)
     // itemContract.setProvider(this.props.web3.currentProvider)
