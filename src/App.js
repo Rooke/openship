@@ -1,8 +1,14 @@
 import React, { Component } from 'react'
-import SampleContract from '../build/contracts/SampleContract.json'
+import SimpleStorage from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { styled } from 'styled-components';
+
+const StyleWrapper = styled.div`
+  font-family: Montserrat;
+  font-size: 1em;
+`
 
 const ITEMS = [
   '32d06f49e0d244f46479cfde52ce44b120a5378b1bdec9433050ab51897f5ba8',
@@ -15,7 +21,9 @@ import {
  } from './actions';
 
 import NavigationComponent from './components/NavigationComponent';
-import { BuyView, ShipView } from './components';
+//import { BuyView, ShipView } from './components';
+import { ShipView, BuyView } from './components';
+//import BuyView from './components/views/buy/BuyView';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -43,18 +51,13 @@ class App extends Component {
     const contract = require('truffle-contract');
 
     //  create Contrat from JSON
-    let contract = contract(SampleContract);
+    let item = contract(SimpleStorage);
 
     //  set web3 as Contract interface / provider
-    contract.setProvider(this.props.web3.currentProvider);
+    item.setProvider(this.props.web3.currentProvider);
 
 
-    -    simpleStorage.setProvider(this.props.web3.currentProvider) 
-    // const contract = require('truffle-contract')
-    // const itemContract = contract(SimpleStorageContract)
-    // itemContract.setProvider(this.props.web3.currentProvider)
-    //
-    // // Get account
+    
     // if (window.location.indexOf("ethship.mikerooke.net") !== -1) {
     //   this.props.setUserWalletAdress('35a20fb66a2dd8c6ae8efeb93f19b268e4f303fe12e9d199b2083f6f91828742');
     // } else {
@@ -76,13 +79,13 @@ class App extends Component {
     return (
       <div>
         <Router>
-          <div>
+          <StyleWrapper>
             <NavigationComponent />
             <div>
               <Route path='/buy' component={BuyView} />
               <Route path='/ship' component={ShipView} />
             </div>
-          </div>
+          </StyleWrapper>
         </Router>
       </div>
 
