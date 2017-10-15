@@ -8,24 +8,29 @@ contract Shippable {
     uint productValue;
     uint deposit;
 
-    struct public TransportInfo {
+    struct TransportInfo {
 	    string deliveryLocation;
 	    string currentLocation;
 	    uint currentShipPrice;
 	    uint shippingTime;
     }
 
-    TransportInfo transportInfo;
+    TransportInfo public transportInfo;
  
     struct Shipper {
     	address addr;
     	uint shipPrice;
     }
 
+    uint numShippers;
     mapping (uint => Shipper) shippers;
 
-    uint numShippers;
+    function newShipper(address addr, uint shipPrice) returns (uint shipperID) {
+    	shipperID = numShipper++;
+    	shippers[shipperID] = Shipper(addr, shipPrice);
+    }
 
+    // Account addresses
     address public owner;
     address public seller;
     address public buyer;
@@ -42,6 +47,7 @@ contract Shippable {
     	owner = msg.sender;
     	seller = owner;
     	productValue = _productValue;
+    	currentLocation = _currentLocation;
     	sellingState = SellingState.ForSale;
     }   
 
@@ -85,11 +91,6 @@ contract Shippable {
     		transportInfo.currentShipPrice = newShipPrice;
     		transportInfo.currentLocation = _currentLocation;
     	}
-    }
-
-    // Get deliveryLocation, currentLocation, currentShipPrice and shippingTime
-    function getTransportInfo() returns (TransportInfo) {
-        return transportInfo;
     }
 
     // Verifies if the current shipper is responsible for the shipped item
