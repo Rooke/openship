@@ -4,7 +4,7 @@ import { Route } from 'react-router-dom';
 import Home from './Home';
 import AcceptOrder from './AcceptOrder';
 import TransferItem from './TransferItem';
-import { withProps } from '../../utils/withProps';
+import withProps from '../../utils/withProps';
 
 class ShipView extends Component {
   render() {
@@ -20,6 +20,6 @@ class ShipView extends Component {
 }
 
 export default connect(
-  () => {},
+  () => ({}),
   {  }
 )(ShipView);

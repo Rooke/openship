@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import SimpleStorage from '../build/contracts/SimpleStorage.json'
+import Shippable from '../build/contracts/Shippable.json'
 import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -17,7 +17,10 @@ const StyleWrapper = styled.div`
 `;
 
 const ITEMS = [
-  '17a6a85d69081cd44755cb4dfc93e675ff5b2d4d',
+  '0xfd702993386a91c29d8d1747e0b669876d1ab659',
+  '0xa67751ac43e8173ff7e98f01935a18361189c643',
+  '0x46bca782c79e37298a0e4ee087691871dd7c6d63',
+  '0x1931789999defd15ad14406f208df7c02cc9b2f1',
 ]
 
 import {
@@ -55,7 +58,7 @@ class App extends Component {
           this.props.setUserWalletAdress('35a20fb66a2dd8c6ae8efeb93f19b268e4f303fe12e9d199b2083f6f91828742');
         } else {
           this.state.web3.eth.getAccounts((error, accounts) => {
-            this.props.setUserWalletAdress(accounts[0]);
+            this.props.setUserWalletAdress(accounts[1]);
           });
         }
 
@@ -70,7 +73,7 @@ class App extends Component {
 
   instantiateContract() {
     const contract = require('truffle-contract')
-    const itemContract = contract(SimpleStorage)
+    const itemContract = contract(Shippable)
     itemContract.setProvider(this.state.web3.currentProvider);
 
     this.setState({ itemContract }, () => {
@@ -81,7 +84,8 @@ class App extends Component {
   loadItemInstances(items) {
     if (items.length === 0) {
       this.state.itemInstances.forEach((instance, index) => {
-        this.props.setItemInfo(index, instance.getTransportInfo.call({from: this.props.user}));
+        console.log(instance);
+        this.props.setItemInfo(index, instance.transportInfo.call({from: this.props.user}));
       });
       return;
     }
@@ -89,8 +93,10 @@ class App extends Component {
     const item = items.shift();
     const remainingItems = [ ...items ];
 
-    // this.state.itemContract.at(item).then((instance) => {
-    this.state.itemContract.deployed().then((instance) => {
+    this.state.itemContract.at(item).then((instance) => {
+    // this.state.itemContract.deployed().then((instance) => {
+    // this.state.itemContract.new().then((instance) => {
+      instance.transportInfo.call({ from: this.props.user }).then((data)=> {console.log(data)});
       this.setState({ itemInstances: [ ...this.state.itemInstances, instance ] }, () => {
         this.loadItemInstances(remainingItems);
       });
