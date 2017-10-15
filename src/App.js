@@ -40,16 +40,16 @@ class App extends Component {
 
   instantiateContract() {
     //  require Truffle to create Contract
-    const contract = require('truffle-contract');
+    const Contract = require('truffle-contract');
 
     //  create Contrat from JSON
-    let contract = contract(SampleContract);
+    let contract = Contract(SampleContract);
 
     //  set web3 as Contract interface / provider
     contract.setProvider(this.props.web3.currentProvider);
 
 
-    -    simpleStorage.setProvider(this.props.web3.currentProvider) 
+    //    simpleStorage.setProvider(this.props.web3.currentProvider) 
     // const contract = require('truffle-contract')
     // const itemContract = contract(SimpleStorageContract)
     // itemContract.setProvider(this.props.web3.currentProvider)
