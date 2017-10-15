@@ -56,7 +56,7 @@ contract Shippable {
     // Confirms that the buyer wants to purchase the item at its productValue and ship it at deliveryLocation
     // for shipPrice before _shippingTime seconds. Transfers the productValue and shipPrice on the contract.
     function buy(string _deliveryLocation, uint shipPrice, uint _deadline) public payable {
-    	if ((msg.value >= (productValue + shipPrice)*10^18 && sellingState == SellingState.ForSale){
+    	if (msg.value >= (productValue + shipPrice)*10^18 && sellingState == SellingState.ForSale) {
         	transportInfo.deliveryLocation = _deliveryLocation;
         	initialShipPrice = shipPrice;
     	    transportInfo.currentShipPrice = initialShipPrice;
