@@ -1,6 +1,6 @@
 # OpenShip
 
-_OpenShip_ is a smart contract for tracking the shipment of physical goods, allowing for peer-to-peer shipment networks. The contract `Shippable.sol` is located (here)[./contracts/Shippable.sol]
+_OpenShip_ is a smart contract for tracking the shipment of physical goods, allowing for peer-to-peer shipment networks. The contract `Shippable.sol` is located [here](contracts/Shippable.sol)
 
 ### Tech
 
