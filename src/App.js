@@ -1,37 +1,68 @@
 import React, { Component } from 'react'
-import SampleContract from '../build/contracts/SampleContract.json'
+import SimpleStorage from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const ITEMS = [
-  '32d06f49e0d244f46479cfde52ce44b120a5378b1bdec9433050ab51897f5ba8',
+  '17a6a85d69081cd44755cb4dfc93e675ff5b2d4d',
 ]
 
 import {
-  setWeb3,
-  addContract,
   setUserWalletAdress
  } from './actions';
 
 import NavigationComponent from './components/NavigationComponent';
-import { BuyView, ShipView } from './components';
+import ShipView from './components/ShipView';
+import BuyView from './components/ShipView';
 
 import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
 
+// hoc to inject web3 props
+const withWeb3 = (WrappedComponent, web3Props) => {
+  // ...and returns another component...
+  return class extends Component {
+    render() {
+      return <WrappedComponent
+        {...web3Props}
+        {...this.props}
+      />;
+    }
+  };
+}
+
 class App extends Component {
- 
+  constructor(props) {
+    super(props);
+    this.instantiateContract = this.instantiateContract.bind(this);
+    this.loadItemInstances = this.loadItemInstances.bind(this);
+    this.state = {
+      web3: null,
+      itemInstances: [],
+      itemContract: null,
+    };
+  }
   componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
     getWeb3
     .then(results => {
-      this.props.setWeb3(results.web3);
-      // Instantiate contract once web3 provided.
-      this.instantiateContract()
+      this.setState({ web3: results.web3 }, () => {
+        // Instantiate contract once web3 provided.
+        this.instantiateContract();
+
+        // Get account
+        if (window.location.href.indexOf("ethship.mikerooke.net") !== -1) {
+          this.props.setUserWalletAdress('35a20fb66a2dd8c6ae8efeb93f19b268e4f303fe12e9d199b2083f6f91828742');
+        } else {
+          this.state.web3.eth.getAccounts((error, accounts) => {
+            this.props.setUserWalletAdress(accounts[0]);
+          });
+        }
+      });
     })
     .catch(() => {
       console.log('Error finding web3.')
@@ -39,48 +70,43 @@ class App extends Component {
   }
 
   instantiateContract() {
-    //  require Truffle to create Contract
-    const Contract = require('truffle-contract');
+    const contract = require('truffle-contract')
+    const itemContract = contract(SimpleStorage)
+    itemContract.setProvider(this.state.web3.currentProvider);
 
-    //  create Contrat from JSON
-    let contract = Contract(SampleContract);
+    this.setState({ itemContract }, () => {
+      this.loadItemInstances(ITEMS);
+    });
+  }
 
-    //  set web3 as Contract interface / provider
-    contract.setProvider(this.props.web3.currentProvider);
+  loadItemInstances(items) {
+    if (items.length === 0) { return; }
 
+    const item = items.shift();
+    const remainingItems = [ ...items ];
 
-    //    simpleStorage.setProvider(this.props.web3.currentProvider) 
-    // const contract = require('truffle-contract')
-    // const itemContract = contract(SimpleStorageContract)
-    // itemContract.setProvider(this.props.web3.currentProvider)
-    //
-    // // Get account
-    // if (window.location.indexOf("ethship.mikerooke.net") !== -1) {
-    //   this.props.setUserWalletAdress('35a20fb66a2dd8c6ae8efeb93f19b268e4f303fe12e9d199b2083f6f91828742');
-    // } else {
-    //   this.props.web3.eth.getAccounts((error, accounts) => {
-    //     console.log(accounts[0]);
-    //     this.props.setUserWalletAdress(accounts[0]);
-    //   });
-    // }
-    //
-    // // Get items
-    // ITEMS.forEach((itemAddr) => {
-    //   itemContract.at(itemAddr).then((instance) => {
-    //     this.props.addContract(instance);
-    //   })
-    // });
+    // this.state.itemContract.at(item).then((instance) => {
+    this.state.itemContract.deployed().then((instance) => {
+      this.setState({ itemInstances: [ ...this.state.itemInstances, instance ] }, () => {
+        this.loadItemInstances(remainingItems);
+      });
+    });
   }
 
   render() {
+    const web3Props = {
+      web3: this.state.web3,
+      itemContract: this.state.itemContract,
+      itemInstances: this.state.itemInstances,
+    };
     return (
       <div>
         <Router>
           <div>
             <NavigationComponent />
             <div>
-              <Route path='/buy' component={BuyView} />
-              <Route path='/ship' component={ShipView} />
+              <Route path='/buy' component={withWeb3(BuyView, web3Props)} />
+              <Route path='/ship' component={withWeb3(ShipView, web3Props)} />
             </div>
           </div>
         </Router>
@@ -91,12 +117,9 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  web3: state.webThreeReducer.web3,
-})
+});
 
 const mapDispatchToProps = dispatch => ({
-  setWeb3: (web3) => dispatch(setWeb3(web3)),
-  addContract: (contract) => dispatch(addContract(contract)),
   setUserWalletAdress: (adress) => dispatch(setUserWalletAdress(adress)),
 })
 
