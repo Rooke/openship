@@ -6,7 +6,6 @@ app.use(cors())
 const Shippable = require('../build/contracts/Shippable.json');
 const Web3 = require("web3");
 
-
 var provider = new Web3.providers.HttpProvider("http://localhost:8545");
 var web3 = new Web3(provider);
 var contract = require("truffle-contract");
@@ -43,6 +42,41 @@ app.post('/buy', function (req, res) {
     });
   }).catch((e) => {console.log(e)});
 })
+
+app.post('/transfer-item', function (req, res) {
+  const newShipPrice = req.body.newShipPrice;
+  const currentLocation = req.body.currentLocation;
+
+  return itemContract.transferItem(newShipPrice, currentLocation);
+});
+
+app.post('/accept-transfer', function(req, res) {
+  const value = req.body.value;
+  return itemContract.sendTransaction({value});
+});
+
+app.post('/delivered', function(req, res) {
+  const value = req.body.value;
+  return itemContract.delivered({value})
+})
+
+app.post('/checkDeadline', function(req, res) {
+  const value = req.body.value;
+  return itemContract.checkDeadline({value});
+})
+
+app.get('/isMyItem', function(req, res) {
+  return itemContract.isMyItem.call();
+})
+
+app.get('/isMyShipment', function(req, res) {
+  return itemContract.isMyShipment.call();
+})
+
+app.get('/getValue', function(req, res) {
+  return itemContract.getValue.call();
+})
+
 
 app.listen(3010, function () {
   console.log('app listening on port 3010!')
