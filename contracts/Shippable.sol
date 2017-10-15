@@ -7,12 +7,13 @@ contract Shippable {
 
     uint productValue;
     uint deposit;
+    uint initialShipPrice;
 
     struct TransportInfo {
 	    string deliveryLocation;
 	    string currentLocation;
 	    uint currentShipPrice;
-	    uint shippingTime;
+	    uint deadline;
     }
 
     TransportInfo public transportInfo;
@@ -25,7 +26,7 @@ contract Shippable {
     uint numShippers;
     mapping (uint => Shipper) shippers;
 
-    function newShipper(address addr, uint shipPrice) returns (uint shipperID) {
+    function newShipper(address addr, uint shipPrice) private returns (uint shipperID) {
     	shipperID = numShippers;
     	shippers[shipperID] = Shipper(addr, shipPrice);
     	numShippers++;
@@ -44,7 +45,7 @@ contract Shippable {
     ShippingState public shippingState;
 
     // Contract constructor.
-    function Shippable(uint _productValue, string _currentLocation) payable {
+    function Shippable(uint _productValue, string _currentLocation) public payable {
     	owner = msg.sender;
     	seller = owner;
     	productValue = _productValue;
@@ -54,33 +55,34 @@ contract Shippable {
 
     // Confirms that the buyer wants to purchase the item at its productValue and ship it at deliveryLocation
     // for shipPrice before _shippingTime seconds. Transfers the productValue and shipPrice on the contract.
-    function buy(string _deliveryLocation, uint shipPrice, uint _shippingTime) payable {
-    	if ((msg.value == productValue + shipPrice) && sellingState == SellingState.ForSale){
+    function buy(string _deliveryLocation, uint shipPrice, uint _deadline) public payable {
+    	if ((msg.value >= productValue + shipPrice) && sellingState == SellingState.ForSale){
         	transportInfo.deliveryLocation = _deliveryLocation;
-    	    transportInfo.currentShipPrice = shipPrice;
-    	    transportInfo.shippingTime = _shippingTime;
+        	initialShipPrice = shipPrice;
+    	    transportInfo.currentShipPrice = initialShipPrice;
+    	    transportInfo.deadline = _deadline;
         	buyer = msg.sender;
         	transferOwnership(buyer);
         	sellingState = SellingState.Sold;
     	}
 	}
 
-	function transferOwnership(address newOwner){
+	function transferOwnership(address newOwner) public {
 		require(newOwner != address(0));
 		owner = newOwner;
 	}    
 	
 	// Accept to take responsibility of the shipped item
-    function acceptTransfer() payable {
+    function acceptTransfer() public payable {
 		if(shippingState == ShippingState.Awaiting){
-			if (msg.value == deposit){
+			if (msg.value >= deposit){
 				newShipper(msg.sender, transportInfo.currentShipPrice);
 				currentShipper = msg.sender;
 				shippingState = ShippingState.Shipping;				
 			}
 		}
 		else if (shippingState == ShippingState.Shipping){
-			if (msg.value == deposit){
+			if (msg.value >= deposit){
 		        currentShipper.transfer(deposit);
 		        newShipper(msg.sender, transportInfo.currentShipPrice);
 		        currentShipper = msg.sender;							
@@ -89,7 +91,7 @@ contract Shippable {
     }
 
     // Offer to transfer shipped item from current shipper to new shipper
-    function transferItem(uint newShipPrice, string _currentLocation) {
+    function transferItem(uint newShipPrice, string _currentLocation) public {
     	if (msg.sender == currentShipper || msg.sender == seller){
     		transportInfo.currentShipPrice = newShipPrice;
     		transportInfo.currentLocation = _currentLocation;
@@ -97,7 +99,7 @@ contract Shippable {
     }
 
     // Verifies if the current shipper is responsible for the shipped item
-    function isMyItem() returns (bool) {
+    function isMyItem() public returns (bool) {
     	if(msg.sender == currentShipper){
     		return true;
     	}
@@ -106,7 +108,7 @@ contract Shippable {
     }
 
     // Confirms that the item was delivered to the owner/buyer
-    function delivered() {
+    function delivered() public {
     	if (msg.sender == owner){
 	    	// Pay all shippers
 	    	uint shipperID;
@@ -114,6 +116,13 @@ contract Shippable {
 	    		shippers[shipperID].addr.transfer(shippers[shipperID].shipPrice);
 	    	}
 	    	shippingState = ShippingState.Delivered;	
+    	}
+    }
+
+    // Refund owner if deadline is past
+    function checkDeadline() public {
+    	if (now > transportInfo.deadline){
+			owner.transfer(deposit + initialShipPrice);
     	}
     }
     
