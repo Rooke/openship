@@ -24,6 +24,7 @@ import {
 import NavigationComponent from './components/NavigationComponent';
 import ShipView from './components/ship/ShipView';
 import BuyView from './components/views/buy/BuyView';
+import SellView from './components/sell/SellView';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -87,8 +88,10 @@ class App extends Component {
           });
         });
         instance.isMyItem.call({from: this.props.user}).then((data) => {
-          console.log(data);
           this.props.setItemInfo(index, { isMyItem: data });
+        });
+        instance.isSold.call({from: this.props.user}).then((data) => {
+          this.props.setItemInfo(index, { isSold: data });
         });
       });
       return;
@@ -100,6 +103,7 @@ class App extends Component {
     this.state.itemContract.at(item).then((instance) => {
     // this.state.itemContract.deployed().then((instance) => {
     // this.state.itemContract.new().then((instance) => {
+      console.log(instance);
       this.setState({ itemInstances: [ ...this.state.itemInstances, instance ] }, () => {
         this.loadItemInstances(remainingItems);
       });
@@ -120,6 +124,7 @@ class App extends Component {
             <div>
               <Route path='/buy' component={withProps(BuyView, web3Props)} />
               <Route path='/ship' component={withProps(ShipView, web3Props)} />
+              <Route path='/sell' component={withProps(SellView, web3Props)} />
             </div>
           </StyleWrapper>
         </Router>

@@ -9,10 +9,12 @@ const Home = (props) => {
   const myItems = [];
 
   props.itemInstances.forEach((instance, index) => {
-    if (props.itemObjs[index].isMyItem === true) {
-      myItems.push({ index, data: props.itemObjs[index] });
-    } else if (props.itemObjs[index].isMyItem === false) {
-      orders.push({ index, data: props.itemObjs[index] });
+    if (props.itemObjs[index].isSold) {
+      if (props.itemObjs[index].isMyItem === true) {
+        myItems.push({ index, data: props.itemObjs[index] });
+      } else if (props.itemObjs[index].isMyItem === false) {
+        orders.push({ index, data: props.itemObjs[index] });
+      }
     }
   });
 
