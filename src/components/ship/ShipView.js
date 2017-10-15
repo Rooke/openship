@@ -14,7 +14,6 @@ class ShipView extends Component {
         <Route path={`${this.props.match.url}/order/:itemIndex`} component={withProps(AcceptOrder, { itemInstances: this.props.itemInstances })} />
         <Route path={`${this.props.match.url}/item/:itemIndex`} component={withProps(TransferItem, { itemInstances: this.props.itemInstances })} />
       </div>
-
     );
   }
 }

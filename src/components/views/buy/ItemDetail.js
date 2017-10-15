@@ -1,31 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import { connect } from 'react-redux';
+import ItemDetailComponent from './ItemDetailComponent';
 
-const Wrapper = styled.div`
-  margin: 20%;
-`;
+const mapStateToProps = (state, withProps) => ({
+  title: state.items.items[withProps.match.params.itemIndex].title,
+  src: state.items.items[withProps.match.params.itemIndex].src,
+  price: state.items.items[withProps.match.params.itemIndex].price,
+  deliveryLocation: state.items.items[withProps.match.params.itemIndex].deliveryLocation,
+  currentLocation: state.items.items[withProps.match.params.itemIndex].currentLocation,
+  currentShipPrice: state.items.items[withProps.match.params.itemIndex].currentShipPrice,
+  shippingTime: state.items.items[withProps.match.params.itemIndex].shippingTime,
+});
 
-const Title = styled.h2`
+const mapDispatchToProps = (dispatch) => ({
+  buyItem: () => {},
+});
 
-`;
-
-const Image = styled.img`
-  max-width: 400px;
-  max-height: 400px;
-`
-
-const Description = styled.div`
-  max-width: 400px;
-`
-
-export default ({item}) =>
-  <Wrapper>
-    <Title>{item.title}</Title>
-    <Image src={item.src} />
-    <Description>{item.description}</Description>
-    {item.price && <div>{item.price}</div>}
-    {item.deliveryLocation && <div>{item.deliveryLocation}</div>}
-    {item.currentLocation && <div>{item.currentLocation}</div>}
-    {item.currentShipPrice && <div>{item.currentShipPrice}</div>}
-    {item.shiipingTime && <div>{item.shippingTime}</div>}
-  </Wrapper>
+export default connect(mapStateToProps, null)(ItemDetailComponent);

@@ -4,6 +4,11 @@ const initialState = {
       title: 'yellow bike',
       src: 'https://i.pinimg.com/736x/40/ba/c8/40bac89fdf296d77e22abe228739d87f--art-students-candy-land.jpg',
       description: 'Travel wit style and comfort',
+      price: 23,
+      deliveryLocation: 'Shanghai',
+      currentLocation: 'Area51',
+      currentShipPrice: 2,
+      shippingTime: 2355,
     },
     {
       title: 'unicorn bike',

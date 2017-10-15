@@ -1,12 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
-const Wrapper = styled.div`
+const WrapLink = styled(Link)`
   padding: 0 10px 0 10px;
+  text-decoration: none;
+  color: #333;
 `;
 
 const Item = styled.div`
-  color: blue;
   padding: 10px;
   max-width: 100%;
   @media screen (min-width: 450) {
@@ -21,63 +23,59 @@ const Image = styled.img`
   max-width: inherit;
 `;
 
-const Description = styled.div`
-  padding-top: 10px;
-  width: 100%;
-  height: 30px;
-  font-family: Montserrat;
-  font-weight: 700;
-`;
-
 const Title = styled.div`
   font-size: 25px;
   color: #333333;
-  float: left;
 `;
 
-const Price = styled.div`
-  font-size: 25px;
-  color: #333333;
-  float: right;
+const List = styled.div`
+  padding-top: 10px;
+  width: 100%;
+  font-family: 20px;
+  font-family: Montserrat;
+  font-weight: 700;
+  display: flex;
+  flex-direction: column;
+  tex-decoration: none;
 `;
 
-export default ({item, showShippingPrice, showShippingTime}) =>
-  <Wrapper>
+export default ({index, title, src, price, deliveryLocation, currentLocation, showShippingPrice, currentShipPrice, shippingTime, showShippingTime}) =>
+  <WrapLink to={`/buy/${index}`}>
     <Item>
-      <Image src={item.src}/>
-      <Description>
-        <Title>{item.title}</Title>
-        {item.price && (
-          <div>
-            <label>Price: </label>
-            <Price>{item.price}</Price>
-          </div>
-        )}
-        {item.deliveryLocation && (
-          <div>
-            <label>Delivery Location: </label>
-            <span>{item.deliveryLocation}</span>
-          </div>
-        )}
-        {item.currentLocation && (
-          <div>
-            <label>Current Location: </label>
-            <span>{item.currentLocation}</span>
-          </div>
-        )}
-        {item.currentShipPrice && showShippingPrice (
-          <div>
-            <label>Shipping Price: </label>
-            <span>{item.currentShipPrice}</span>
-          </div>
-        )}
-        {item.shippingTime && showShippingTime (
-          <div>
-            <label>Shipping Time: </label>
-            <span>{item.shippingTime}</span>
-          </div>
-        )}
-      </Description>
+      <Image src={src}/>
+        <List>
+          <Title>{title}</Title>
+          {price && (
+            <div>
+              <label>Price: </label>
+              <span>{price}</span>
+            </div>
+          )}
+          {deliveryLocation && (
+            <div>
+              <label>Delivery Location: </label>
+              <span>{deliveryLocation}</span>
+            </div>
+          )}
+          {currentLocation && (
+            <div>
+              <label>Current Location: </label>
+              <span>{currentLocation}</span>
+            </div>
+          )}
+          {currentShipPrice && showShippingPrice && (
+            <div>
+              <label>Shipping Price: </label>
+              <span>{currentShipPrice}</span>
+            </div>
+          )}
+          {shippingTime && showShippingTime && (
+            <div>
+              <label>Shipping Time: </label>
+              <span>{shippingTime}</span>
+            </div>
+          )}
+      </List>
     </Item>
-  </Wrapper>
+  </WrapLink>
 ;

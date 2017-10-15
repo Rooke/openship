@@ -8,6 +8,8 @@ import styled from 'styled-components';
 import withProps from './utils/withProps';
 import instanceAddresses from './utils/instances.json';
 
+import ItemDetail from './components/views/buy/ItemDetail';
+
 const StyleWrapper = styled.div`
   font-family: Montserrat;
   font-size: 1em;
@@ -23,7 +25,7 @@ import {
 
 import NavigationComponent from './components/NavigationComponent';
 import ShipView from './components/ship/ShipView';
-import BuyView from './components/views/buy/BuyView';
+import BuyItems from './components/views/buy/BuyItems';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -118,7 +120,8 @@ class App extends Component {
           <StyleWrapper>
             <NavigationComponent />
             <div>
-              <Route path='/buy' component={withProps(BuyView, web3Props)} />
+              <Route path={`/buy/:itemIndex`} component={ItemDetail} />
+              <Route exact path='/buy' component={withProps(BuyItems, web3Props)} />
               <Route path='/ship' component={withProps(ShipView, web3Props)} />
             </div>
           </StyleWrapper>
