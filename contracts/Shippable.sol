@@ -56,7 +56,7 @@ contract Shippable {
     // Confirms that the buyer wants to purchase the item at its productValue and ship it at deliveryLocation
     // for shipPrice before _shippingTime seconds. Transfers the productValue and shipPrice on the contract.
     function buy(string _deliveryLocation, uint shipPrice, uint _deadline) public payable {
-    	if ((msg.value >= productValue + shipPrice) && sellingState == SellingState.ForSale){
+    	if ((msg.value >= (productValue + shipPrice)*10^18 && sellingState == SellingState.ForSale){
         	transportInfo.deliveryLocation = _deliveryLocation;
         	initialShipPrice = shipPrice;
     	    transportInfo.currentShipPrice = initialShipPrice;
@@ -75,14 +75,14 @@ contract Shippable {
 	// Accept to take responsibility of the shipped item
     function acceptTransfer() public payable {
 		if(shippingState == ShippingState.Awaiting){
-			if (msg.value >= deposit){
+			if (msg.value >= deposit*10^18){
 				newShipper(msg.sender, transportInfo.currentShipPrice);
 				currentShipper = msg.sender;
 				shippingState = ShippingState.Shipping;				
 			}
 		}
 		else if (shippingState == ShippingState.Shipping){
-			if (msg.value >= deposit){
+			if (msg.value >= deposit*10^18){
 		        currentShipper.transfer(deposit);
 		        newShipper(msg.sender, transportInfo.currentShipPrice);
 		        currentShipper = msg.sender;							
@@ -95,6 +95,7 @@ contract Shippable {
     	if (msg.sender == currentShipper || msg.sender == seller){
     		transportInfo.currentShipPrice = newShipPrice;
     		transportInfo.currentLocation = _currentLocation;
+    		deposit = productValue;
     	}
     }
 
