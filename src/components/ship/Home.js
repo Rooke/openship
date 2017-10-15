@@ -8,11 +8,11 @@ const Home = (props) => {
   const orders = [];
   const myItems = [];
 
-  this.props.itemInstances.forEach((instance, index) => {
-    if (instance.isMyItem.call({from: this.props.user})) {
-      myItems.push({ index, data: this.props.itemObjs[index] });
+  props.itemInstances.forEach((instance, index) => {
+    if (instance.isMyItem.call({from: props.user})) {
+      myItems.push({ index, data: props.itemObjs[index] });
     } else {
-      orders.push({ index, data: this.props.itemObjs[index] });
+      orders.push({ index, data: props.itemObjs[index] });
     }
   });
 
@@ -21,7 +21,7 @@ const Home = (props) => {
       <h4>Available Orders</h4>
       {orders.length ?
         orders.map((itemObj) => (
-          <Link to={`${this.props.match.url}/order/${itemObj.index}`}>
+          <Link to={`${props.match.url}/order/${itemObj.index}`}>
             <Item item={itemObj.data} />
           </Link>
         )) :
@@ -31,7 +31,7 @@ const Home = (props) => {
       <h4>My Items</h4>
       {myItems.length ?
         myItems.map((itemObj) => (
-          <Link to={`${this.props.match.url}/item/${itemObj.index}`}>
+          <Link to={`${props.match.url}/item/${itemObj.index}`}>
             <Item item={itemObj.data} />
           </Link>
         )) :
