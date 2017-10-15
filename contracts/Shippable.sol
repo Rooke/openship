@@ -26,7 +26,7 @@ contract Shippable {
     mapping (uint => Shipper) shippers;
 
     function newShipper(address addr, uint shipPrice) returns (uint shipperID) {
-    	shipperID = numShipper++;
+    	shipperID = numShippers++;
     	shippers[shipperID] = Shipper(addr, shipPrice);
     }
 
@@ -47,7 +47,7 @@ contract Shippable {
     	owner = msg.sender;
     	seller = owner;
     	productValue = _productValue;
-    	currentLocation = _currentLocation;
+    	transportInfo.currentLocation = _currentLocation;
     	sellingState = SellingState.ForSale;
     }   
 
