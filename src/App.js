@@ -3,11 +3,17 @@ import SimpleStorage from '../build/contracts/SimpleStorage.json'
 import getWeb3 from './utils/getWeb3'
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { setItemInfo } from './actions/items';
 import styled from 'styled-components';
+import withProps from './utils/withProps';
 
 const StyleWrapper = styled.div`
   font-family: Montserrat;
   font-size: 1em;
+  @font-face {
+    font-family: Montserrat;
+    src: url('https://fonts.googleapis.com/css?family=Montserrat');
+  }
 `;
 
 const ITEMS = [
@@ -19,26 +25,13 @@ import {
  } from './actions';
 
 import NavigationComponent from './components/NavigationComponent';
-import ShipView from './components/ShipView';
+import ShipView from './components/ship/ShipView';
 import BuyView from './components/views/buy/BuyView';
 
 import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
-
-// hoc to inject web3 props
-const withWeb3 = (WrappedComponent, web3Props) => {
-  // ...and returns another component...
-  return class extends Component {
-    render() {
-      return <WrappedComponent
-        {...web3Props}
-        {...this.props}
-      />;
-    }
-  };
-}
 
 class App extends Component {
   constructor(props) {
@@ -57,9 +50,6 @@ class App extends Component {
     getWeb3
     .then(results => {
       this.setState({ web3: results.web3 }, () => {
-        // Instantiate contract once web3 provided.
-        this.instantiateContract();
-
         // Get account
         if (window.location.href.indexOf("ethship.mikerooke.net") !== -1) {
           this.props.setUserWalletAdress('35a20fb66a2dd8c6ae8efeb93f19b268e4f303fe12e9d199b2083f6f91828742');
@@ -68,6 +58,9 @@ class App extends Component {
             this.props.setUserWalletAdress(accounts[0]);
           });
         }
+
+        // Instantiate contract once web3 provided.
+        this.instantiateContract();
       });
     })
     .catch(() => {
@@ -86,7 +79,12 @@ class App extends Component {
   }
 
   loadItemInstances(items) {
-    if (items.length === 0) { return; }
+    if (items.length === 0) {
+      this.state.itemInstances.forEach((instance, index) => {
+        this.props.setItemInfo(index, instance.getTransportInfo.call({from: this.props.user}));
+      });
+      return;
+    }
 
     const item = items.shift();
     const remainingItems = [ ...items ];
@@ -111,8 +109,8 @@ class App extends Component {
           <StyleWrapper>
             <NavigationComponent />
             <div>
-              <Route path='/buy' component={withWeb3(BuyView, web3Props)} />
-              <Route path='/ship' component={withWeb3(ShipView, web3Props)} />
+              <Route path='/buy' component={withProps(BuyView, web3Props)} />
+              <Route path='/ship' component={withProps(ShipView, web3Props)} />
             </div>
           </StyleWrapper>
         </Router>
@@ -123,10 +121,12 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  user: state.userWallet.userWalletAdress,
 });
 
 const mapDispatchToProps = dispatch => ({
   setUserWalletAdress: (adress) => dispatch(setUserWalletAdress(adress)),
+  setItemInfo: (index, itemInfo) => dispatch(setItemInfo(index, itemInfo)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -127,4 +127,7 @@ contract Shippable {
     	}
     }
     
+		function getContractState() public {
+			return (owner, seller, productValue, transportInfo.currentLocation, sellingState); 
+		}
 }
