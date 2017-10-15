@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { setItemInfo } from './actions/items';
 import styled from 'styled-components';
 import withProps from './utils/withProps';
+import instanceAddresses from './utils/instances.json';
 
 const StyleWrapper = styled.div`
   font-family: Montserrat;
@@ -15,13 +16,6 @@ const StyleWrapper = styled.div`
     src: url('https://fonts.googleapis.com/css?family=Montserrat');
   }
 `;
-
-const ITEMS = [
-  '0xfd702993386a91c29d8d1747e0b669876d1ab659',
-  '0xa67751ac43e8173ff7e98f01935a18361189c643',
-  '0x46bca782c79e37298a0e4ee087691871dd7c6d63',
-  '0x1931789999defd15ad14406f208df7c02cc9b2f1',
-]
 
 import {
   setUserWalletAdress
@@ -77,15 +71,25 @@ class App extends Component {
     itemContract.setProvider(this.state.web3.currentProvider);
 
     this.setState({ itemContract }, () => {
-      this.loadItemInstances(ITEMS);
+      this.loadItemInstances(instanceAddresses.instances);
     });
   }
 
   loadItemInstances(items) {
     if (items.length === 0) {
       this.state.itemInstances.forEach((instance, index) => {
-        console.log(instance);
-        this.props.setItemInfo(index, instance.transportInfo.call({from: this.props.user}));
+        instance.transportInfo.call({from: this.props.user}).then((data) => {
+          this.props.setItemInfo(index, {
+            deliveryLocation: data[0],
+      	    currentLocation: data[1],
+      	    currentShipPrice: data[2].toNumber(),
+      	    deadline: data[3].toNumber()
+          });
+        });
+        instance.isMyItem.call({from: this.props.user}).then((data) => {
+          console.log(data);
+          this.props.setItemInfo(index, { isMyItem: data });
+        });
       });
       return;
     }
@@ -96,7 +100,6 @@ class App extends Component {
     this.state.itemContract.at(item).then((instance) => {
     // this.state.itemContract.deployed().then((instance) => {
     // this.state.itemContract.new().then((instance) => {
-      instance.transportInfo.call({ from: this.props.user }).then((data)=> {console.log(data)});
       this.setState({ itemInstances: [ ...this.state.itemInstances, instance ] }, () => {
         this.loadItemInstances(remainingItems);
       });
