@@ -8,8 +8,7 @@ import styled from 'styled-components';
 import withProps from './utils/withProps';
 import instanceAddresses from './utils/instances.json';
 import Welcome from './components/Welcome';
-
-import ItemDetail from './components/views/buy/ItemDetail';
+import BuyView from './components/views/buy/BuyView';
 import SellView from './components/sell/SellView';
 
 const StyleWrapper = styled.div`
@@ -27,7 +26,6 @@ import {
 
 import NavigationComponent from './components/NavigationComponent';
 import ShipView from './components/ship/ShipView';
-import BuyItems from './components/views/buy/BuyItems';
 
 import './css/oswald.css'
 import './css/open-sans.css'
@@ -55,8 +53,11 @@ class App extends Component {
           deliveryLocation: data[0],
           currentLocation: data[1],
           currentShipPrice: data[2].toNumber(),
-          deadline: data[3].toNumber()
+          shippingTime: data[3].toNumber()
         });
+      });
+      instance.getValue.call({from: this.props.user}).then((data) => {
+        this.props.setItemInfo(index, { price: data.toNumber() });
       });
       instance.isMyItem.call({from: this.props.user}).then((data) => {
         this.props.setItemInfo(index, { isMyItem: data });
@@ -101,6 +102,11 @@ class App extends Component {
     const contract = require('truffle-contract')
     const itemContract = contract(Shippable)
     itemContract.setProvider(this.state.web3.currentProvider);
+    itemContract.defaults({
+      from: this.props.user,
+      gas: 4712388,
+      gasPrice: 100000000000,
+    });
 
     this.setState({ itemContract }, () => {
       this.loadItemInstances(instanceAddresses.instances);
@@ -136,8 +142,7 @@ class App extends Component {
           <StyleWrapper>
             <NavigationComponent />
             <div>
-              <Route path={`/buy/:itemIndex`} component={withProps(ItemDetail, web3Props)} />
-              <Route exact path='/buy' component={withProps(BuyItems, web3Props)} />
+              <Route exact path='/buy' component={withProps(BuyView, web3Props)} />
               <Route exact path='/' component={Welcome}/>
               <Route path='/ship' component={withProps(ShipView, web3Props)} />
               <Route path='/sell' component={withProps(SellView, web3Props)} />

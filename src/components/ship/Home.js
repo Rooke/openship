@@ -2,6 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Item from '../views/buy/Item';
+import { withRouter } from 'react-router';
+
 
 const Home = (props) => {
   // split item instances between my items and orders
@@ -9,11 +11,13 @@ const Home = (props) => {
   const myItems = [];
 
   props.itemInstances.forEach((instance, index) => {
-    if (props.itemObjs[index].isSold) {
-      if (props.itemObjs[index].isMyItem === true) {
-        myItems.push({ index, data: props.itemObjs[index] });
-      } else if (props.itemObjs[index].isMyItem === false) {
-        orders.push({ index, data: props.itemObjs[index] });
+    if (props.itemObjs[index]) {
+      if (props.itemObjs[index].isSold) {
+        if (props.itemObjs[index].isMyItem === true) {
+          myItems.push({ index, data: props.itemObjs[index] });
+        } else if (props.itemObjs[index].isMyItem === false) {
+          orders.push({ index, data: props.itemObjs[index] });
+        }
       }
     }
   });
@@ -43,9 +47,9 @@ const Home = (props) => {
   );
 }
 
-export default connect(
+export default withRouter(connect(
   (state) => ({
     itemObjs: state.items.items,
   }),
   {  }
-)(Home);
+)(Home));

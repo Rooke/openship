@@ -1,14 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
-
-const WrapLink = styled(Link)`
-  flex-basis: 500px;
-  max-width: 500px;
-  padding: 0 10px 0 10px;
-  text-decoration: none;
-  color: #333;
-`;
 
 const Item = styled.div`
   padding: 10px;
@@ -18,7 +9,7 @@ const Item = styled.div`
 `;
 
 const Image = styled.img`
-  width: 100%;  
+  width: 100%;
 `;
 
 const Title = styled.div`
@@ -37,43 +28,42 @@ const List = styled.div`
   tex-decoration: none;
 `;
 
-export default ({index, title, src, price, deliveryLocation, currentLocation, showShippingPrice, currentShipPrice, shippingTime, showShippingTime}) =>
-  <WrapLink to={`/buy/${index}`}>
+export default ({showShippingPrice, item, showShippingTime}) =>
+
     <Item>
-      <Image src={src}/>
+      <Image src={item.src}/>
         <List>
-          <Title>{title}</Title>
-          {price && (
+          <Title>{item.title}</Title>
+          {item.price && (
             <div>
               <label>Price: </label>
-              <span>{price}</span>
+              <span>{item.price}</span>
             </div>
           )}
-          {deliveryLocation && (
+          {item.deliveryLocation && (
             <div>
               <label>Delivery Location: </label>
-              <span>{deliveryLocation}</span>
+              <span>{item.deliveryLocation}</span>
             </div>
           )}
-          {currentLocation && (
+          {item.currentLocation && (
             <div>
               <label>Current Location: </label>
-              <span>{currentLocation}</span>
+              <span>{item.currentLocation}</span>
             </div>
           )}
-          {currentShipPrice && showShippingPrice && (
+          {(item.currentShipPrice && showShippingPrice) && (
             <div>
               <label>Shipping Price: </label>
-              <span>{currentShipPrice}</span>
+              <span>{item.currentShipPrice}</span>
             </div>
           )}
-          {shippingTime && showShippingTime && (
+          {(item.shippingTime && showShippingTime) && (
             <div>
               <label>Shipping Time: </label>
-              <span>{shippingTime}</span>
+              <span>{item.shippingTime}</span>
             </div>
           )}
       </List>
     </Item>
-  </WrapLink>
 ;

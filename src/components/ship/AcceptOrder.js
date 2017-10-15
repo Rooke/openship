@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemDetail from '../views/buy/ItemDetail';
+import { withRouter } from 'react-router';
+
 
 class AcceptOrder extends Component {
   render() {
@@ -25,10 +27,10 @@ class AcceptOrder extends Component {
   }
 }
 
-export default connect(
+export default withRouter(connect(
   (state) => ({
     itemObjs: state.items.items,
     user: state.userWallet.userWalletAdress,
   }),
   {  }
-)(AcceptOrder);
+)(AcceptOrder));

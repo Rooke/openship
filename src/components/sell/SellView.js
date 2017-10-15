@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Form from 'react-jsonschema-form';
 import { connect } from 'react-redux'
 import Item from '../views/buy/Item';
+import axios from 'axios';
 
 class SellView extends Component {
   render() {
@@ -10,7 +11,7 @@ class SellView extends Component {
         <h4>Open Orders</h4>
         <div>
           {this.props.itemInstances.map((instance, index) => {
-            if (!this.props.itemObjs[index].isSold) {
+            if (this.props.itemObjs[index] && (!this.props.itemObjs[index].isSold)) {
               return <Item key={index} item={this.props.itemObjs[index]} />
             }
             return null;
@@ -37,10 +38,11 @@ class SellView extends Component {
             'ui:order': ['address', 'price']
           }}
           onSubmit={({ formData }) => {
-            this.props.itemContract.new(formData.price, formData.address)
-              .then((newInstance) => {
-                this.props.addInstance(newInstance);
-              })
+            axios.post('http://localhost:3010/new-instance', formData).then(({ data }) => {
+              this.props.itemContract.at(data).then((instance) => {
+                this.props.addInstance(instance);
+              });
+            })
           }}
         />
       </div>
