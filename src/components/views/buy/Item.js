@@ -1,4 +1,4 @@
-import { React } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -23,4 +23,4 @@ export default ({item}) =>
     <Image src={item.src}/>
     <Title>{item.title}</Title>
     <Price>{item.price}</Price>
-  </Wrapper>
+  </Wrapper>;
