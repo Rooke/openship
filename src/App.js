@@ -8,6 +8,10 @@ import styled from 'styled-components';
 const StyleWrapper = styled.div`
   font-family: Montserrat;
   font-size: 1em;
+  @font-face {
+    font-family: Montserrat;
+    src: url('https://fonts.googleapis.com/css?family=Montserrat');
+  }
 `;
 
 const ITEMS = [
