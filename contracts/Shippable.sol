@@ -150,6 +150,8 @@ contract Shippable {
     function checkDeadline() payable public {
     	if (now > transportInfo.deadline){
 			owner.transfer(deposit + initialShipPrice);
+			sellingState = SellingState.ForSale;
+			shippingState = ShippingState.Awaiting;
     	}
     }
 }
