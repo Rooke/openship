@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemDetail from '../views/buy/ItemDetail';
-import { withRouter } from 'react-router';
-
 
 class AcceptOrder extends Component {
   render() {
@@ -16,6 +14,7 @@ class AcceptOrder extends Component {
             this.props.itemInstances[itemIndex]
               .acceptTransfer({from: this.props.user})
               .then(() => {
+                this.props.refresh();
                 this.props.history.push('/ship');
               })
           }}
@@ -27,10 +26,10 @@ class AcceptOrder extends Component {
   }
 }
 
-export default withRouter(connect(
+export default connect(
   (state) => ({
     itemObjs: state.items.items,
     user: state.userWallet.userWalletAdress,
   }),
   {  }
-)(AcceptOrder));
+)(AcceptOrder);

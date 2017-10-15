@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import ItemDetail from '../views/buy/ItemDetail';
 import Form from 'react-jsonschema-form';
-import { withRouter } from 'react-router';
-
 
 class TransferItem extends Component {
   render() {
@@ -37,30 +35,25 @@ class TransferItem extends Component {
             this.props.itemInstances[itemIndex]
               .transferItem(formData.price, formData.address)
               .then(() => {
+                this.props.refresh();
                 this.props.history.push('/ship');
               })
           }}
         />
         <button
-          onClick={() => {
-            this.props.itemInstances[itemIndex]
-              .acceptTransfer({from: this.props.user})
-              .then(() => {
-                this.props.history.push('/ship');
-              })
-          }}
+          type="submit"
         >
-          Accept
+          Request Shipment Transfer
         </button>
       </div>
     )
   }
 }
 
-export default withRouter(connect(
+export default connect(
   (state) => ({
     itemObjs: state.items.items,
     user: state.userWallet.userWalletAdress,
   }),
   {  }
-)(TransferItem));
+)(TransferItem);

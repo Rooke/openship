@@ -66,18 +66,18 @@ class ItemDetail extends Component {
             <span>{item.currentLocation}</span>
           </div>
         )}
-        {(item.currentShipPrice && showShippingPrice) && (
+        {showShippingPrice && (item.currentShipPrice ? (
           <div>
             <Label>Shipping Price: </Label>
             <span>{item.currentShipPrice}</span>
           </div>
-        )}
-        {(item.shippingTime && showShippingTime) && (
+        ) : null)}
+        {showShippingTime && (item.shippingTime ? (
           <div>
             <Label>Shipping Time: </Label>
             <span>{item.shippingTime}</span>
           </div>
-        )}
+        ) : null)}
       </List>
     </Wrapper>
     )

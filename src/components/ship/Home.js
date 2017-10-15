@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Item from '../views/buy/Item';
-import { withRouter } from 'react-router';
 
 
 const Home = (props) => {
@@ -47,9 +46,9 @@ const Home = (props) => {
   );
 }
 
-export default withRouter(connect(
+export default connect(
   (state) => ({
     itemObjs: state.items.items,
   }),
   {  }
-)(Home));
+)(Home);

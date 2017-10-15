@@ -135,6 +135,7 @@ class App extends Component {
       itemContract: this.state.itemContract,
       itemInstances: this.state.itemInstances,
       addInstance: this.addInstance,
+      refresh: this.fetchItemsData,
     };
     return (
       <div>
@@ -142,7 +143,7 @@ class App extends Component {
           <StyleWrapper>
             <NavigationComponent />
             <div>
-              <Route exact path='/buy' component={withProps(BuyView, web3Props)} />
+              <Route path='/buy' component={withProps(BuyView, web3Props)} />
               <Route exact path='/' component={Welcome}/>
               <Route path='/ship' component={withProps(ShipView, web3Props)} />
               <Route path='/sell' component={withProps(SellView, web3Props)} />

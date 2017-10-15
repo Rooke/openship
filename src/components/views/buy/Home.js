@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import Item from './Item';
-import { withRouter } from 'react-router';   
 
 const WrapLink = styled(Link)`
   flex-basis: 500px;
@@ -32,4 +31,4 @@ const mapStateToProps = (state) => ({
   items: state.items.items,
 });
 
-export default withRouter(connect(mapStateToProps,null)(Home));
+export default connect(mapStateToProps,null)(Home);

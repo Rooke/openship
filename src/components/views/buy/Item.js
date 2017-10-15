@@ -52,18 +52,18 @@ export default ({showShippingPrice, item, showShippingTime}) =>
               <span>{item.currentLocation}</span>
             </div>
           )}
-          {(item.currentShipPrice && showShippingPrice) && (
+          {showShippingPrice && (item.currentShipPrice ? (
             <div>
               <label>Shipping Price: </label>
               <span>{item.currentShipPrice}</span>
             </div>
-          )}
-          {(item.shippingTime && showShippingTime) && (
+          ) : null)}
+          {showShippingTime && (item.shippingTime ? (
             <div>
               <label>Shipping Time: </label>
               <span>{item.shippingTime}</span>
             </div>
-          )}
+          ) : null)}
       </List>
     </Item>
 ;

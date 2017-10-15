@@ -22,12 +22,11 @@ const Button = styled.button`
   margin-top: 10px;
 `
 
-const BuyItemsComponent = ({items, match, itemInstances, history}) => {
-  const itemIndex = 0;
+const BuyItemsComponent = ({items, match, itemInstances, history, refresh}) => {
+  const itemIndex = match.params.itemIndex;
   const item = items[itemIndex];
   const instance = itemInstances[itemIndex];
 
-  console.log(items, match);
   return (
     <Wrapper>
       <ItemDetail
@@ -62,6 +61,7 @@ const BuyItemsComponent = ({items, match, itemInstances, history}) => {
             instanceAddr: instance.address,
             ...formData,
           }).then().then(() => {
+            refresh();
             history.push('/buy');
           })
         }}
