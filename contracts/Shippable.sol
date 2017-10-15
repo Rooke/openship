@@ -26,8 +26,9 @@ contract Shippable {
     mapping (uint => Shipper) shippers;
 
     function newShipper(address addr, uint shipPrice) returns (uint shipperID) {
-    	shipperID = numShipper++;
+    	shipperID = numShippers;
     	shippers[shipperID] = Shipper(addr, shipPrice);
+    	numShippers++;
     }
 
     // Account addresses
@@ -47,7 +48,7 @@ contract Shippable {
     	owner = msg.sender;
     	seller = owner;
     	productValue = _productValue;
-    	currentLocation = _currentLocation;
+    	transportInfo.currentLocation = _currentLocation;
     	sellingState = SellingState.ForSale;
     }   
 
@@ -69,10 +70,11 @@ contract Shippable {
 		owner = newOwner;
 	}    
 	
-
+	// Accept to take responsibility of the shipped item
     function acceptTransfer() payable {
 		if(shippingState == ShippingState.Awaiting){
 			if (msg.value == deposit){
+				newShipper(msg.sender, transportInfo.currentShipPrice);
 				currentShipper = msg.sender;
 				shippingState = ShippingState.Shipping;				
 			}
@@ -80,6 +82,7 @@ contract Shippable {
 		else if (shippingState == ShippingState.Shipping){
 			if (msg.value == deposit){
 		        currentShipper.transfer(deposit);
+		        newShipper(msg.sender, transportInfo.currentShipPrice);
 		        currentShipper = msg.sender;							
 			}
 		}
@@ -87,7 +90,7 @@ contract Shippable {
 
     // Offer to transfer shipped item from current shipper to new shipper
     function transferItem(uint newShipPrice, string _currentLocation) {
-    	if (msg.sender == currentShipper){
+    	if (msg.sender == currentShipper || msg.sender == seller){
     		transportInfo.currentShipPrice = newShipPrice;
     		transportInfo.currentLocation = _currentLocation;
     	}
@@ -106,6 +109,10 @@ contract Shippable {
     function delivered() {
     	if (msg.sender == owner){
 	    	// Pay all shippers
+	    	uint shipperID;
+	    	for (shipperID=0; shipperID<numShippers; shipperID++){
+	    		shippers[shipperID].addr.transfer(shippers[shipperID].shipPrice);
+	    	}
 	    	shippingState = ShippingState.Delivered;	
     	}
     }
