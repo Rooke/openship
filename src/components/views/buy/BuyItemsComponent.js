@@ -13,4 +13,3 @@ export default ({items}) =>
   <Wrapper>
     {items && items.map(item => <Item key={items.indexOf(item)} index={items.indexOf(item)} {...item} />)}
   </Wrapper>
-

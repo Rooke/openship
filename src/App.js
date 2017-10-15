@@ -136,7 +136,7 @@ class App extends Component {
           <StyleWrapper>
             <NavigationComponent />
             <div>
-              <Route path={`/buy/:itemIndex`} component={ItemDetail} />
+              <Route path={`/buy/:itemIndex`} component={withProps(ItemDetail, web3Props)} />
               <Route exact path='/buy' component={withProps(BuyItems, web3Props)} />
               <Route exact path='/' component={Welcome}/>
               <Route path='/ship' component={withProps(ShipView, web3Props)} />

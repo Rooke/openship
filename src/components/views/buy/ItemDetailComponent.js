@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -51,43 +51,59 @@ const Label = styled.label`
   font-weight: 800;
 `
 
-export default ({ title, src, price, deliveryLocation, currentLocation, currentShipPrice, shippingTime }) =>
-  <Wrapper>
-    <Image src={src} />
-    <List>
-      <Title>{title}</Title>
-      {price && (
-        <div>
-          <Label>Price: </Label>
-          <span>{price}</span>
-        </div>
-      )}
-      {deliveryLocation && (
-        <div>
-          <Label>Delivery Location: </Label>
-          <span>{deliveryLocation}</span>
-        </div>
-      )}
-      {currentLocation && (
-        <div>
-          <Label>Current Location: </Label>
-          <span>{currentLocation}</span>
-        </div>
-      )}
-      {currentShipPrice && (
-        <div>
-          <Label>Shipping Price: </Label>
-          <span>{currentShipPrice}</span>
-        </div>
-      )}
-      {shippingTime && (
-        <div>
-          <Label>Shipping Time: </Label>
-          <span>{shippingTime}</span>
-        </div>
-      )}
-      <Button>
-        Buy
-      </Button>
-    </List>
-  </Wrapper>
+class ItemDetailComponent extends Component {
+  super(props);
+  this.buyItem = this.bind(buyItem);  
+  buyItem(index, deliveryLocation, shipPrice, deadline, instance) {
+    instance.buy(deliveryLocation, shipPrice, deadline).then((data) => {
+      this.props.setItemInfo(index, { isMyItem: true });
+      this.props.setBought(index);
+    });
+  }
+
+  render() {
+    let { index, title, src, price, deliveryLocation, currentLocation, currentShipPrice, shippingTime, instance } = this.props;
+    return(
+      <Wrapper>
+      {JSON.stringify(instance)}
+      <Image src={src} />
+      <List>
+        <Title>{title}</Title>
+        {price && (
+          <div>
+            <Label>Price: </Label>
+            <span>{price}</span>
+          </div>
+        )}
+        {deliveryLocation && (
+          <div>
+            <Label>Delivery Location: </Label>
+            <span>{deliveryLocation}</span>
+          </div>
+        )}
+        {currentLocation && (
+          <div>
+            <Label>Current Location: </Label>
+            <span>{currentLocation}</span>
+          </div>
+        )}
+        {currentShipPrice && (
+          <div>
+            <Label>Shipping Price: </Label>
+            <span>{currentShipPrice}</span>
+          </div>
+        )}
+        {shippingTime && (
+          <div>
+            <Label>Shipping Time: </Label>
+            <span>{shippingTime}</span>
+          </div>
+        )}
+        <Button onClick={() => buyItem(index)}>
+          Buy
+        </Button>
+      </List>
+    </Wrapper>
+    )
+  }
+}

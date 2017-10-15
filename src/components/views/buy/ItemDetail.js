@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { setItemInfo } from '../../../actions';
 import ItemDetailComponent from './ItemDetailComponent';
 
+
 const mapStateToProps = (state, withProps) => ({
+  index: [withProps.match.params.itemIndex],
   title: state.items.items[withProps.match.params.itemIndex].title,
   src: state.items.items[withProps.match.params.itemIndex].src,
   price: state.items.items[withProps.match.params.itemIndex].price,
@@ -10,10 +13,11 @@ const mapStateToProps = (state, withProps) => ({
   currentLocation: state.items.items[withProps.match.params.itemIndex].currentLocation,
   currentShipPrice: state.items.items[withProps.match.params.itemIndex].currentShipPrice,
   shippingTime: state.items.items[withProps.match.params.itemIndex].shippingTime,
+  instance: withProps.web3Props.instances[withProps.match.params.itemIndex],
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  buyItem: () => {},
+  setBought: (index) => dispatch(setItemInfo(index, { isMyItem: true })),
 });
 
 export default connect(mapStateToProps, null)(ItemDetailComponent);
